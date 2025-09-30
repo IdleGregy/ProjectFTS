@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>User Manager — My System</title>
+  <link rel="stylesheet" href="user-manager.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+   <aside class="sidebar">
+    <h2>My System</h2>
+    <nav>
+    <ul class="menu">
+      <li><a href="../dashboard/dashboard.html">Home</a></li>
+
+      <!-- Parent Module -->
+      <li class="has-submenu">
+        <a href="javascript:void(0)" class="submenu-toggle">USER MANAGEMENT </a>
+        <ul class="submenu">
+          <li><a href="../user-manager/user-manager.html">User Manager</a></li>
+          <li><a href="../role-manager/role-manager.html">Role Manager</a></li>
+        </ul>
+      </li>
+
+      <li><a href="#">Reports</a></li>
+      <li><a href="#">Settings</a></li>
+      <li><a href="../login/login.html">Logout</a></li>
+   </ul>
+   </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="main-content">
+      <h1>User Manager</h1>
+      <p>Manage your users here.</p>
+
+      <!-- Add User button -->
+      <div class="add-user-container">
+        <button id="addUserBtn">+ Add User</button>
+      </div>
+
+      <!-- User Table -->
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>admin</td>
+            <td>admin@example.com</td>
+            <td>Administrator</td>
+            <td>
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>user1</td>
+            <td>user1@example.com</td>
+            <td>User</td>
+            <td>
+              <button class="edit-btn">Edit</button>
+              <button class="delete-btn">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div id="userModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Add New User</h2>
+      <form id="addUserForm">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" required>
+
+        <label for="middleName">Middle Name</label>
+        <input type="text" id="middleName" name="middleName">
+
+        <label for="surname">Surname</label>
+        <input type="text" id="surname" name="surname" required>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword" name="confirmPassword" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="role">Role</label>
+        <select id="role" name="role" required>
+          <option value="">Select role</option>
+          <option value="Administrator">Administrator</option>
+          <option value="User">User</option>
+        </select>
+
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="user-manager.js"></script>
+</body>
+</html>

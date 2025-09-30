@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — My System</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <main class="container">
+
+    <!-- Hero section sa kaliwa -->
+    <section class="left">
+      <div class="hero">
+        <h2>Welcome to the System</h2>
+        <p>Enter your credentials to continue to the dashboard.</p>
+      </div>
+    </section>
+
+    <!-- Login card sa kanan -->
+    <aside class="right">
+      <div class="card">
+        <h1>Sign in</h1>
+        <form id="loginForm" autocomplete="off" novalidate>
+          <label for="username">Username</label>
+          <input id="username" name="username" type="text" required />
+
+          <label for="password">Password</label>
+          <div class="pwd-wrap">
+            <input id="password" name="password" type="password" required minlength="6" />
+            <button type="button" id="togglePwd" aria-label="Toggle password">👁️</button>
+          </div>
+
+          <label for="captchaInput">Captcha</label>
+          <div class="captcha-row">
+            <canvas id="captchaCanvas" width="390" height="50" aria-hidden="true"></canvas>
+            <button type="button" id="reloadCaptcha" title="Reload captcha">↻</button>
+          </div>
+          <input id="captchaInput" name="captcha" type="text" placeholder="Type captcha word" required />
+
+          <div class="row">
+            <label class="remember">
+              <input id="remember" type="checkbox" name="remember" />
+              Remember me
+            </label>
+            <a class="forgot" href="#" id="forgotLink">Forgot password?</a>
+          </div>
+
+          <div class="actions">
+            <button id="submitBtn" type="submit">Log in</button>
+          </div>
+
+          <!-- Status / messages -->
+          <div id="msg" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </aside>
+
+  </main>
+
+  <!-- External JS for login handling -->
+  <script src="login.js"></script>
+</body>
+</html>

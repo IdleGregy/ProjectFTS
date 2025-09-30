@@ -1,0 +1,318 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f5f6fa;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Container layout */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #2c3e50;
+  color: #fff;
+  padding: 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+.sidebar .menu {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar .menu li {
+  margin-bottom: 12px;
+  position: relative;
+}
+
+.sidebar .menu li a {
+  color: #ecf0f1;
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.sidebar .menu li a:hover {
+  background: #34495e;
+}
+
+/* Submenu */
+.submenu {
+  display: none; /* Hidden by default */
+  list-style: none;
+  padding-left: 15px;
+  margin-top: 5px;
+}
+
+/* Parent toggle link */
+.submenu-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Arrow indicator */
+.submenu-toggle::after {
+  content: '▾';
+  transition: transform 0.3s;
+}
+
+/* Rotate arrow when open */
+.has-submenu.open > .submenu-toggle::after {
+  transform: rotate(-180deg);
+}
+
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f5f6fa;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Content wrapper */
+.content-wrapper {
+  width: 100%;
+  max-width: 1000px;
+}
+
+/* Heading */
+.main-content h1 {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+/* Role controls */
+.role-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.role-controls input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  flex: 1;
+}
+
+.role-controls button {
+  padding: 8px 16px;
+  border: none;
+  background: #3498db;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.role-controls button:hover {
+  background: #2980b9;
+}
+
+/* Tabs */
+.tabs {
+  margin-bottom: 15px;
+}
+
+.tab-btn {
+  padding: 10px 18px;
+  border: none;
+  cursor: pointer;
+  background: #bdc3c7;
+  color: #333;
+  border-radius: 4px 4px 0 0;
+  margin-right: 5px;
+  transition: background 0.2s;
+  font-weight: bold;
+}
+
+.tab-btn.active {
+  background: #3498db;
+  color: #fff;
+}
+
+/* Tables */
+.role-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 25px;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.role-table th,
+.role-table td {
+  border: 1px solid #ddd;
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.role-table th {
+  background: #3498db;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 13px;
+}
+
+.role-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.role-table tr:hover {
+  background: #f1f1f1;
+}
+
+/* Action buttons */
+.edit-btn, .delete-btn, .restore-btn, .permanent-delete-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 13px;
+  margin-right: 5px;
+  transition: opacity 0.2s, transform 0.1s;
+}
+
+.edit-btn { background: #27ae60; }
+.delete-btn { background: #e74c3c; }
+.restore-btn { background: #f39c12; }
+.permanent-delete-btn { background: #c0392b; }
+
+.edit-btn:hover,
+.delete-btn:hover,
+.restore-btn:hover,
+.permanent-delete-btn:hover {
+  opacity: 0.85;
+  transform: scale(1.05);
+}
+
+/* Tabs content */
+.tab-content {
+  display: none;
+  width: 100%;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+  background: #fff;
+  margin: auto;
+  padding: 20px;
+  border-radius: 6px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  position: relative;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+
+.modal-content input,
+.modal-content textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.modal-content button {
+  background: #3498db;
+  border: none;
+  padding: 8px 14px;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.modal-content button:hover {
+  background: #2980b9;
+}
+
+/* Close button */
+.close {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #333;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .dashboard-container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    text-align: center;
+  }
+
+  .role-controls {
+    flex-direction: column;
+  }
+}

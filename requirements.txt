@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+sqlalchemy
+mysql-connector-python
+pyjwt
+passlib[bcrypt]
+python-dotenv
+pip install pymysql python-dotenv

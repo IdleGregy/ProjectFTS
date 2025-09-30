@@ -1,0 +1,123 @@
+:root {
+  --sidebar-bg: #1f2937;
+  --sidebar-text: #ffffff;
+  --main-bg: #f4f6f8;
+  --accent: #1f6feb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body, html { height: 100%; font-family: Inter, sans-serif; }
+
+.dashboard-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: var(--sidebar-bg);
+  color: var(--sidebar-text);
+  padding: 20px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.sidebar h2 {
+  margin-bottom: 20px;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* User Info */
+.user-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  background: #1a252f;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.user-info button {
+  background: var(--accent);
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-info button:hover {
+  background: #1457c1;
+}
+
+/* Menu */
+.sidebar .menu {
+  list-style: none;
+  padding-left: 0;
+}
+
+.sidebar .menu li {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.sidebar .menu li a {
+  color: var(--sidebar-text);
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.sidebar .menu li a:hover {
+  background: #34495e;
+}
+
+/* Submenu */
+.submenu {
+  display: none;
+  list-style: none;
+  padding-left: 15px;
+  margin-top: 5px;
+}
+
+.submenu li a {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+/* Submenu toggle */
+.submenu-toggle {
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Arrow indicator */
+.submenu-toggle::after {
+  content: '▾';
+  transition: transform 0.3s;
+}
+
+/* Rotate arrow when open */
+.has-submenu.open > .submenu-toggle::after {
+  transform: rotate(-180deg);
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  background: var(--main-bg);
+  padding: 30px;
+  overflow-y: auto;
+}
