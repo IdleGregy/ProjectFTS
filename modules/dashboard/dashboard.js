@@ -1,47 +1,54 @@
 // =====================
-// Dashboard.js - Role-aware Sidebar
+// Dashboard.js - Dynamic Role-aware Sidebar with Submodules
 // =====================
 
-// Sidebar toggle
-function initSidebarToggle() {
-  document.querySelectorAll('.submenu-toggle').forEach(toggle => {
-    toggle.addEventListener('click', e => {
-      e.preventDefault();
-      const parentLi = toggle.parentElement;
-      parentLi.classList.toggle('open');
-      const submenu = toggle.nextElementSibling;
-      if (submenu) submenu.style.display = parentLi.classList.contains('open') ? 'block' : 'none';
-    });
-  });
-}
+// Modules array with optional submodules
+const modules = [
+  {
+    name: "Dashboard",
+    path: "/modules/dashboard/dashboard.html",
+    roles: ["user", "admin"]
+  },
+  {
+    name: "User Management",
+    path: "#",
+    roles: ["admin"],
+    children: [
+      { name: "User Manager", path: "/modules/usermanager/user-manager.html", roles: ["admin"] },
+      { name: "Role Manager", path: "/modules/role/role-manager.html", roles: ["admin"] }
 
-// Sidebar generation
+    ]
+  },
+  {
+    name: "Reports",
+    path: "/modules/reports/reports.html",
+    roles: ["admin"]
+  },
+  {
+    name: "Settings",
+    path: "/modules/settings/settings.html",
+    roles: ["user", "admin"]
+  }
+];
+
+// Generate sidebar with nested submodules
 function generateSidebar(role) {
   const sidebar = document.getElementById('sidebarMenu');
   if (!sidebar) return;
   sidebar.innerHTML = '';
 
-  const menuItems = [
-    { label: 'Home', href: '/modules/dashboard/dashboard.html', roles: ['user', 'admin'] },
-    { label: 'User Management', href: '#', roles: ['admin'], children: [
-      { label: 'User Manager', href: '/modules/user-manager/user-manager.html', roles: ['admin'] },
-      { label: 'Role Manager', href: '/modules/role-manager/role-manager.html', roles: ['admin'] }
-    ]},
-    { label: 'Reports', href: '#', roles: ['admin'] },
-    { label: 'Settings', href: '#', roles: ['user', 'admin'] }
-  ];
-
-  menuItems.forEach(item => {
+  modules.forEach(item => {
     if (!item.roles.includes(role)) return;
 
     const li = document.createElement('li');
     li.classList.add('menu-item');
 
-    if (item.children) {
+    if (item.children && item.children.length > 0) {
+      // Parent module with submodules
       const a = document.createElement('a');
-      a.href = item.href;
+      a.href = item.path;
+      a.textContent = item.name;
       a.classList.add('submenu-toggle');
-      a.textContent = item.label;
       li.appendChild(a);
 
       const ul = document.createElement('ul');
@@ -52,57 +59,75 @@ function generateSidebar(role) {
         if (!child.roles.includes(role)) return;
         const childLi = document.createElement('li');
         const childA = document.createElement('a');
-        childA.href = child.href;
-        childA.textContent = child.label;
+        childA.href = child.path;
+        childA.textContent = child.name;
         childLi.appendChild(childA);
         ul.appendChild(childLi);
       });
 
       li.appendChild(ul);
+
+      // Toggle submenu on click with arrow rotation
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const isOpen = ul.style.display === 'block';
+        ul.style.display = isOpen ? 'none' : 'block';
+        li.classList.toggle('open', !isOpen);
+      });
+
     } else {
+      // Single module
       const a = document.createElement('a');
-      a.href = item.href;
-      a.textContent = item.label;
+      a.href = item.path;
+      a.textContent = item.name;
       li.appendChild(a);
     }
 
     sidebar.appendChild(li);
   });
 
-  // Highlight active
+  // Highlight current page and expand submenu if active
   document.querySelectorAll('#sidebarMenu a').forEach(link => {
-    if (link.href === window.location.href) link.classList.add('active');
+    if (link.href === window.location.href) {
+      link.classList.add('active');
+      const parentUl = link.closest('.submenu');
+      if (parentUl) {
+        parentUl.style.display = 'block';
+        const parentLi = parentUl.closest('.menu-item');
+        if (parentLi) parentLi.classList.add('open');
+      }
+    }
   });
+}
+
+// Fetch user info from backend instead of localStorage
+async function getUserInfo() {
+  try {
+    const res = await fetch('/api/dashboard', { credentials: 'include' });
+    if (!res.ok) throw new Error('Not authenticated');
+    const data = await res.json();
+    return data; // { username, role }
+  } catch (err) {
+    console.error(err);
+    window.location.href = '/modules/login/login.html';
+  }
 }
 
 // Dashboard init
 document.addEventListener('DOMContentLoaded', async () => {
-  try {
-    const username = localStorage.getItem('username');
-    const role = localStorage.getItem('role');
+  const userInfo = await getUserInfo();
+  if (!userInfo) return;
 
-    if (!username || !role) {
+  const usernameDisplay = document.getElementById('usernameDisplay');
+  if (usernameDisplay) usernameDisplay.textContent = userInfo.username;
+
+  generateSidebar(userInfo.role);
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      await fetch('/api/logout', { method: 'POST', credentials: 'include' });
       window.location.href = '/modules/login/login.html';
-      return;
-    }
-
-    const usernameDisplay = document.getElementById('usernameDisplay');
-    if (usernameDisplay) usernameDisplay.textContent = username;
-
-    generateSidebar(role);
-    initSidebarToggle();
-
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST', credentials: 'include' });
-        localStorage.removeItem('username');
-        localStorage.removeItem('role');
-        window.location.href = '/modules/login/login.html';
-      });
-    }
-  } catch (err) {
-    console.error(err);
-    window.location.href = '/modules/login/login.html';
+    });
   }
 });

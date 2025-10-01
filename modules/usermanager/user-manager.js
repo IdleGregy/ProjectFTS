@@ -1,29 +1,99 @@
-// Modal elements
+// =====================
+// user-manager.js - User Manager + Dynamic Sidebar + Role Sync
+// =====================
+
+// --- Sidebar & Dashboard integration ---
+document.addEventListener('DOMContentLoaded', () => {
+  try {
+    const username = localStorage.getItem('username');
+    const role = localStorage.getItem('role');
+
+    if (!username || !role) {
+      window.location.href = '/modules/login/login.html';
+      return;
+    }
+
+    const usernameDisplay = document.getElementById('usernameDisplay');
+    if (usernameDisplay) usernameDisplay.textContent = username;
+
+    // Generate dynamic sidebar from dashboard.js modules
+    if (typeof generateSidebar === "function") generateSidebar(role);
+
+    // Logout button
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        await fetch('/api/logout', { method: 'POST', credentials: 'include' });
+        localStorage.removeItem('username');
+        localStorage.removeItem('role');
+        window.location.href = '/modules/login/login.html';
+      });
+    }
+
+    // 🔄 Load roles into select right after DOM ready
+    loadRolesIntoSelect();
+
+  } catch (err) {
+    console.error(err);
+    window.location.href = '/modules/login/login.html';
+  }
+});
+
+// =====================
+// User Manager Modal Logic
+// =====================
+
 const addUserBtn = document.getElementById('addUserBtn');
 const userModal = document.getElementById('userModal');
 const closeModal = document.querySelector('.close');
 const addUserForm = document.getElementById('addUserForm');
-const userTable = document.querySelector('.user-table tbody');
+const userTable = document.getElementById('userTableBody');
+const roleSelect = document.getElementById('role'); // <select id="role">
 
-let editingRow = null; // Track the row being edited
+let editingRow = null;
 
-// Open modal for Add
+// ===== Load Roles into Dropdown =====
+function loadRolesIntoSelect() {
+  if (!roleSelect) return;
+  const roles = JSON.parse(localStorage.getItem("roles")) || [];
+
+  roleSelect.innerHTML = "";
+
+  if (roles.length === 0) {
+    const opt = document.createElement("option");
+    opt.value = "";
+    opt.textContent = "No roles available";
+    roleSelect.appendChild(opt);
+    return;
+  }
+
+  roles.forEach(r => {
+    const opt = document.createElement("option");
+    opt.value = r.name;
+    opt.textContent = r.name;
+    roleSelect.appendChild(opt);
+  });
+}
+
+// 🔔 Listen for updates from role-manager.js
+document.addEventListener("rolesUpdated", () => {
+  console.log("🔄 Roles updated, reloading dropdown...");
+  loadRolesIntoSelect();
+});
+
+// ===== Modal Handling =====
 addUserBtn.addEventListener('click', () => {
   editingRow = null;
   addUserForm.reset();
   addUserForm.querySelector('button[type="submit"]').textContent = "Save";
+  loadRolesIntoSelect(); // reload roles each time modal opens
   userModal.style.display = 'block';
 });
 
-// Close modal
 closeModal.addEventListener('click', () => userModal.style.display = 'none');
+window.addEventListener('click', (e) => { if(e.target === userModal) userModal.style.display = 'none'; });
 
-// Close modal on outside click
-window.addEventListener('click', (e) => { 
-  if(e.target === userModal) userModal.style.display = 'none'; 
-});
-
-// Add or Edit user
+// ===== Add or Edit user =====
 addUserForm.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -33,7 +103,7 @@ addUserForm.addEventListener('submit', (e) => {
   const password = document.getElementById('password').value;
   const confirmPassword = document.getElementById('confirmPassword').value;
   const email = document.getElementById('email').value.trim();
-  const role = document.getElementById('role').value;
+  const role = roleSelect.value;
 
   if(password !== confirmPassword){
     alert("Passwords do not match!");
@@ -43,7 +113,6 @@ addUserForm.addEventListener('submit', (e) => {
   const username = firstName.toLowerCase() + "." + surname.toLowerCase();
 
   if(editingRow){ 
-    // Update existing row
     editingRow.innerHTML = `
       <td>${editingRow.rowIndex}</td>
       <td>${username}</td>
@@ -52,7 +121,6 @@ addUserForm.addEventListener('submit', (e) => {
       <td><button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button></td>
     `;
   } else { 
-    // Add new row
     const newRow = document.createElement('tr');
     newRow.innerHTML = `
       <td>${userTable.children.length + 1}</td>
@@ -66,10 +134,10 @@ addUserForm.addEventListener('submit', (e) => {
 
   addUserForm.reset();
   userModal.style.display = 'none';
-  attachRowButtons(); // Re-attach buttons after changes
+  attachRowButtons();
 });
 
-// Attach Edit and Delete button listeners
+// ===== Attach Edit and Delete button listeners =====
 function attachRowButtons(){
   const editButtons = document.querySelectorAll('.edit-btn');
   const deleteButtons = document.querySelectorAll('.delete-btn');
@@ -80,13 +148,12 @@ function attachRowButtons(){
       const cells = editingRow.children;
       const [id, username, email, role] = [cells[0].textContent, cells[1].textContent, cells[2].textContent, cells[3].textContent];
 
-      // Split username into first and surname
       const names = username.split('.');
       document.getElementById('firstName').value = names[0] || '';
       document.getElementById('middleName').value = '';
       document.getElementById('surname').value = names[1] || '';
       document.getElementById('email').value = email;
-      document.getElementById('role').value = role;
+      roleSelect.value = role;
       document.getElementById('password').value = '';
       document.getElementById('confirmPassword').value = '';
 
@@ -105,7 +172,6 @@ function attachRowButtons(){
   });
 }
 
-// Update table row IDs after deletion
 function updateRowIndices(){
   const rows = userTable.querySelectorAll('tr');
   rows.forEach((row, index) => {
@@ -113,5 +179,4 @@ function updateRowIndices(){
   });
 }
 
-// Initial attach
 attachRowButtons();

@@ -4,9 +4,9 @@ from backend.schemas import UserCreate
 
 db = database.SessionLocal()
 
-username = "testuser"
-password = "123456"
-role = "user"
+username = "admin1"
+password = "123"
+role = "admin"
 
 existing_user = crud.get_user_by_username(db, username)
 if existing_user:

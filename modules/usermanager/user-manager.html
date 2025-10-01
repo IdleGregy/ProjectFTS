@@ -9,26 +9,12 @@
 <body>
   <div class="dashboard-container">
     <!-- Sidebar -->
-   <aside class="sidebar">
-    <h2>My System</h2>
-    <nav>
-    <ul class="menu">
-      <li><a href="../dashboard/dashboard.html">Home</a></li>
-
-      <!-- Parent Module -->
-      <li class="has-submenu">
-        <a href="javascript:void(0)" class="submenu-toggle">USER MANAGEMENT </a>
-        <ul class="submenu">
-          <li><a href="../user-manager/user-manager.html">User Manager</a></li>
-          <li><a href="../role-manager/role-manager.html">Role Manager</a></li>
-        </ul>
-      </li>
-
-      <li><a href="#">Reports</a></li>
-      <li><a href="#">Settings</a></li>
-      <li><a href="../login/login.html">Logout</a></li>
-   </ul>
-   </nav>
+    <aside class="sidebar">
+      <h2>My System</h2>
+      <nav>
+        <!-- Dynamic sidebar will be generated here -->
+        <ul id="sidebarMenu" class="menu"></ul>
+      </nav>
     </aside>
 
     <!-- Main content -->
@@ -52,27 +38,8 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>admin</td>
-            <td>admin@example.com</td>
-            <td>Administrator</td>
-            <td>
-              <button class="edit-btn">Edit</button>
-              <button class="delete-btn">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>user1</td>
-            <td>user1@example.com</td>
-            <td>User</td>
-            <td>
-              <button class="edit-btn">Edit</button>
-              <button class="delete-btn">Delete</button>
-            </td>
-          </tr>
+        <tbody id="userTableBody">
+          <!-- Filled dynamically via JS -->
         </tbody>
       </table>
     </main>
@@ -114,6 +81,8 @@
     </div>
   </div>
 
+  <!-- Scripts -->
+  <script src="../dashboard/dashboard.js"></script>
   <script src="user-manager.js"></script>
 </body>
 </html>

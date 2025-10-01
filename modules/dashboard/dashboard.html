@@ -4,8 +4,25 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Dashboard — My System</title>
-  <!-- Updated: absolute path to CSS -->
+  <!-- CSS for dashboard and sidebar -->
   <link rel="stylesheet" href="/modules/dashboard/dashboard.css">
+  <style>
+    /* Optional inline styles for submenu and active links */
+    .submenu {
+      list-style: none;
+      padding-left: 15px; /* indentation for submodules */
+      display: none;       /* hide by default */
+    }
+
+    .menu-item a.active {
+      font-weight: bold;
+      color: #007bff;      /* highlight active link */
+    }
+
+    .menu-item.open > a {
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
   <div class="dashboard-container">
@@ -30,10 +47,13 @@
     <main class="main-content">
       <h1>Welcome to Dashboard</h1>
       <p>Select a module from the sidebar.</p>
+      <div id="contentArea">
+        <!-- Optional: dynamic content can be loaded here -->
+      </div>
     </main>
   </div>
 
-  <!-- Updated: absolute path to JS -->
+  <!-- JS for dynamic sidebar -->
   <script src="/modules/dashboard/dashboard.js"></script>
 </body>
 </html>
