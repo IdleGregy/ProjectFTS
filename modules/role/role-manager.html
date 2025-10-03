@@ -8,13 +8,22 @@
 </head>
 <body>
   <div class="dashboard-container">
-    <!-- Sidebar -->
+    
     <aside class="sidebar">
-      <h2>My System</h2>
-      <nav>
-        <!-- Dynamic sidebar will be generated here -->
-        <ul id="sidebarMenu" class="menu"></ul>
-      </nav>
+      <div class="sidebar-top">
+        <div class="logo-container">
+          <img src="logo.png" alt="My System Logo" class="sidebar-logo">
+        </div>
+        <nav>
+          <ul id="sidebarMenu" class="menu">
+            <!-- Sidebar items dynamically generated -->
+          </ul>
+        </nav>
+      </div>
+      <div class="user-info">
+        <span id="usernameDisplay">Username</span>
+        <button id="logoutBtn">Logout</button>
+      </div>
     </aside>
 
     <!-- Main content -->
@@ -22,17 +31,21 @@
       <h1>Role Manager</h1>
       <p>Manage system roles here.</p>
 
-      <!-- Controls -->
-      <div class="role-controls">
-        <input type="text" id="searchRole" placeholder="Search role...">
-        <button id="clearSearch" onclick="clearSearch()">Clear</button>
-        <button id="addRoleBtn">+ Add Role</button>
-      </div>
+      <!-- Tabs + Search + Buttons Wrapper -->
+      <div class="tabs-container">
+        <!-- Left: Search + Buttons -->
+        <div class="role-search">
+          <input type="text" placeholder="Search role..." id="roleSearch">
+          <button id="searchBtn">Search</button>
+          <button id="clearSearch" onclick="clearSearch()">Clear</button>
+          <button id="addRoleBtn">+ Add Role</button>
+        </div>
 
-      <!-- Tabs -->
-      <div class="tabs">
-        <button class="tab-btn active" data-tab="activeRoles">Active Roles</button>
-        <button class="tab-btn" data-tab="recycleBin">Recycle Bin</button>
+        <!-- Right: Tabs -->
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="activeRoles">Active Roles</button>
+          <button class="tab-btn" data-tab="recycleBin">Recycle Bin</button>
+        </div>
       </div>
 
       <!-- Active Roles Table -->
@@ -70,28 +83,28 @@
           </tbody>
         </table>
       </section>
+
+      <!-- Add/Edit Modal -->
+      <div id="roleModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2 id="modalTitle">Add New Role</h2>
+          <form id="roleForm">
+            <label for="roleName">Role Name</label>
+            <input type="text" id="roleName" name="roleName" required>
+
+            <label for="roleDesc">Description</label>
+            <textarea id="roleDesc" name="roleDesc" rows="3" required></textarea>
+
+            <button type="submit">Save</button>
+          </form>
+        </div>
+      </div>
+
     </main>
   </div>
 
-  <!-- Add/Edit Modal -->
-  <div id="roleModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2 id="modalTitle">Add New Role</h2>
-      <form id="roleForm">
-        <label for="roleName">Role Name</label>
-        <input type="text" id="roleName" name="roleName" required>
-
-        <label for="roleDesc">Description</label>
-        <textarea id="roleDesc" name="roleDesc" rows="3" required></textarea>
-
-        <button type="submit">Save</button>
-      </form>
-    </div>
-  </div>
-
   <!-- Scripts -->
-   <!-- Scripts -->
   <script src="../dashboard/dashboard.js"></script>
   <script src="../role/role-manager.js"></script>
   <script>
