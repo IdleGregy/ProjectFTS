@@ -1,5 +1,5 @@
 // =====================
-// Role Manager JS (Updated for New Layout)
+// Role Manager JS (Final Updated)
 // =====================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -8,14 +8,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const closeModal = roleModal.querySelector(".close");
   const roleForm = document.getElementById("roleForm");
   const modalTitle = document.getElementById("modalTitle");
-  const searchInput = document.getElementById("searchRole");
+  const searchInput = document.getElementById("roleSearch"); // updated ID
   const clearSearchBtn = document.getElementById("clearSearch");
 
   const activeRoleBody = document.getElementById("activeRoleBody");
   const recycleBinBody = document.getElementById("recycleBinBody");
-
-  const tabs = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
 
   // Load from localStorage or defaults
   let roles = JSON.parse(localStorage.getItem("roles")) || [
@@ -25,32 +22,30 @@ document.addEventListener("DOMContentLoaded", () => {
   let deletedRoles = JSON.parse(localStorage.getItem("deletedRoles")) || [];
   let editingRoleId = null;
 
-  // ===== Helper: Save + Notify =====
+  // ===== Helper: Save + Dispatch Event =====
   function saveAndNotify() {
     localStorage.setItem("roles", JSON.stringify(roles));
     localStorage.setItem("deletedRoles", JSON.stringify(deletedRoles));
     document.dispatchEvent(new Event("rolesUpdated"));
-    window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new Event("storage")); // triggers cross-tab sync
   }
 
-  // ===== Modal Handling =====
-  addRoleBtn.addEventListener("click", () => openModal("Add New Role"));
-  closeModal.addEventListener("click", () => closeModalFunc());
-  window.addEventListener("click", e => { if (e.target === roleModal) closeModalFunc(); });
-
-  function openModal(title) {
-    modalTitle.textContent = title;
+  // ========== Modal Handling ==========
+  addRoleBtn.addEventListener("click", () => {
+    modalTitle.textContent = "Add New Role";
     roleForm.reset();
-    roleModal.style.display = "block";
-  }
-
-  function closeModalFunc() {
-    roleModal.style.display = "none";
     editingRoleId = null;
-  }
+    roleModal.style.display = "block";
+  });
 
-  // ===== Form Submit =====
-  roleForm.addEventListener("submit", e => {
+  closeModal.addEventListener("click", () => roleModal.style.display = "none");
+
+  window.addEventListener("click", (e) => {
+    if (e.target === roleModal) roleModal.style.display = "none";
+  });
+
+  // ========== Form Submit ==========
+  roleForm.addEventListener("submit", (e) => {
     e.preventDefault();
     const roleName = document.getElementById("roleName").value.trim();
     const roleDesc = document.getElementById("roleDesc").value.trim();
@@ -58,15 +53,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!roleName || !roleDesc) return alert("Please fill out all fields.");
 
     if (editingRoleId) {
-      // Update existing role
       const role = roles.find(r => r.id === editingRoleId);
       if (role) {
         role.name = roleName;
         role.desc = roleDesc;
-        role.modifiedBy = "Admin"; // TODO: replace with logged-in user
+        role.modifiedBy = "Admin"; // TODO: replace with logged in user
       }
     } else {
-      // Add new role
       const newRole = {
         id: roles.length ? Math.max(...roles.map(r => r.id)) + 1 : 1,
         name: roleName,
@@ -77,34 +70,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     saveAndNotify();
-    renderRoles(searchInput.value);
-    closeModalFunc();
+    renderRoles();
+    roleForm.reset();
+    roleModal.style.display = "none";
   });
 
-  // ===== Search =====
+  // ========== Search ==========
   searchInput.addEventListener("input", () => renderRoles(searchInput.value));
   clearSearchBtn.addEventListener("click", () => {
     searchInput.value = "";
     renderRoles();
   });
 
-  // ===== Tab Switching =====
-  tabs.forEach(tab => {
-    tab.addEventListener("click", () => {
-      tabs.forEach(t => t.classList.remove("active"));
-      tabContents.forEach(tc => tc.classList.remove("active"));
-
-      tab.classList.add("active");
-      document.getElementById(tab.dataset.tab).classList.add("active");
-    });
-  });
-
-  // ===== Render Roles =====
+  // ========== Render ==========
   function renderRoles(filter = "") {
     activeRoleBody.innerHTML = "";
     recycleBinBody.innerHTML = "";
 
-    // Active Roles
     roles.filter(r => r.name.toLowerCase().includes(filter.toLowerCase()))
       .forEach(role => {
         const tr = document.createElement("tr");
@@ -121,7 +103,6 @@ document.addEventListener("DOMContentLoaded", () => {
         activeRoleBody.appendChild(tr);
       });
 
-    // Recycle Bin Roles
     deletedRoles.forEach(role => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
@@ -131,7 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <td>${role.modifiedBy}</td>
         <td>
           <button class="restore-btn" data-id="${role.id}">Restore</button>
-          <button class="permanent-delete-btn" data-id="${role.id}">Delete</button>
+          <button class="permanent-delete-btn" data-id="${role.id}">Permanent Delete</button>
         </td>
       `;
       recycleBinBody.appendChild(tr);
@@ -140,11 +121,10 @@ document.addEventListener("DOMContentLoaded", () => {
     attachActions(filter);
   }
 
-  // ===== Attach Actions =====
+  // ========== Attach Actions ==========
   function attachActions(filter = "") {
-    // Edit
     document.querySelectorAll(".edit-btn").forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener("click", () => {
         const id = parseInt(btn.dataset.id);
         const role = roles.find(r => r.id === id);
         if (role) {
@@ -154,48 +134,45 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById("roleDesc").value = role.desc;
           roleModal.style.display = "block";
         }
-      };
+      });
     });
 
-    // Delete
     document.querySelectorAll(".delete-btn").forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener("click", () => {
         const id = parseInt(btn.dataset.id);
-        const index = roles.findIndex(r => r.id === id);
-        if (index > -1) {
-          deletedRoles.push(roles[index]);
-          roles.splice(index, 1);
+        const roleIndex = roles.findIndex(r => r.id === id);
+        if (roleIndex > -1) {
+          deletedRoles.push(roles[roleIndex]);
+          roles.splice(roleIndex, 1);
           saveAndNotify();
           renderRoles(filter);
         }
-      };
+      });
     });
 
-    // Restore
     document.querySelectorAll(".restore-btn").forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener("click", () => {
         const id = parseInt(btn.dataset.id);
-        const index = deletedRoles.findIndex(r => r.id === id);
-        if (index > -1) {
-          roles.push(deletedRoles[index]);
-          deletedRoles.splice(index, 1);
+        const roleIndex = deletedRoles.findIndex(r => r.id === id);
+        if (roleIndex > -1) {
+          roles.push(deletedRoles[roleIndex]);
+          deletedRoles.splice(roleIndex, 1);
           saveAndNotify();
           renderRoles(filter);
         }
-      };
+      });
     });
 
-    // Permanent Delete
     document.querySelectorAll(".permanent-delete-btn").forEach(btn => {
-      btn.onclick = () => {
+      btn.addEventListener("click", () => {
         const id = parseInt(btn.dataset.id);
         deletedRoles = deletedRoles.filter(r => r.id !== id);
         saveAndNotify();
         renderRoles(filter);
-      };
+      });
     });
   }
 
-  // ===== Initial Render =====
+  // Init render
   renderRoles();
 });
