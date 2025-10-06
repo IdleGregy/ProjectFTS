@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Apply Module</title>
+  <link rel="stylesheet" href="apply.css">
+</head>
+<body>
+  <div class="container">
+    <div class="module-card">
+      <h1>Apply</h1>
+      <div class="buttons-grid">
+        <button class="btn" id="btn-leave">
+          <img src="leave.png" alt="Leave Logo"> Leave
+        </button>
+
+        <button class="btn" id="btn-overtime">Overtime</button>
+
+        <button class="btn" id="btn-work-restday">Work Restday</button>
+
+        <button class="btn" id="btn-timelog">Time Log Request</button>
+
+        <button class="btn" id="btn-work-holiday">Work on Holiday</button>
+
+        <button class="btn" id="btn-change-schedule">Change Schedule</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Leave Modal (existing) -->
+  <!-- =============================== -->
+  <div id="leaveModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeLeaveModal">&times;</span>
+      <h2>Leave Application</h2>
+      <form id="leaveForm">
+        <label><strong>Leave Duration:</strong></label>
+        <div class="radio-group">
+          <label><input type="radio" name="leaveDuration" value="halfday" required> Half Day</label>
+          <label><input type="radio" name="leaveDuration" value="wholeday"> Whole Day</label>
+        </div>
+
+        <label for="leaveFrom">Date From:</label>
+        <input type="date" id="leaveFrom" name="leaveFrom" required>
+
+        <label for="leaveTo">Date To:</label>
+        <input type="date" id="leaveTo" name="leaveTo" required>
+
+        <label for="leaveType">Leave Type:</label>
+        <select id="leaveType" name="leaveType" required>
+          <option value="">-- Select Leave Type --</option>
+          <option value="sick">Sick Leave</option>
+          <option value="vacation">Vacation Leave</option>
+          <option value="emergency">Emergency Leave</option>
+        </select>
+
+        <label for="leaveReason">Reason:</label>
+        <textarea id="leaveReason" name="leaveReason" placeholder="Enter your reason..." required></textarea>
+
+        <label for="leaveFile">Attach File:</label>
+        <input type="file" id="leaveFile" name="leaveFile" accept=".jpg,.jpeg,.png,.pdf">
+
+        <div class="modal-actions">
+          <button type="button" id="cancelLeave">Close</button>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Overtime Modal (existing) -->
+  <!-- =============================== -->
+  <div id="overtimeModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeOvertimeModal">&times;</span>
+      <h2>Overtime Application</h2>
+
+      <form id="overtimeForm">
+        <label><strong>Date:</strong></label>
+        <input type="date" id="otDate" name="otDate" required>
+
+        <label><strong>Hours:</strong></label>
+        <input type="number" id="otHours" name="otHours" min="0" placeholder="Enter hours" required>
+
+        <label><strong>Minutes:</strong></label>
+        <input type="number" id="otMinutes" name="otMinutes" min="0" max="59" placeholder="Enter minutes" required>
+
+        <label><input type="checkbox" id="otOffset" name="otOffset"> Offset</label>
+
+        <label><strong>Reason:</strong></label>
+        <textarea id="otReason" name="otReason" rows="4" placeholder="Enter your reason..." required></textarea>
+
+        <label><strong>Attach Photo:</strong></label>
+        <input type="file" id="otFileUpload" name="otFileUpload" accept=".jpg,.jpeg,.png">
+
+        <div class="modal-actions">
+          <button type="button" id="cancelOvertime">Close</button>
+          <button type="submit" id="submitOvertime">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Work on Rest Day Modal -->
+  <!-- =============================== -->
+  <div id="workRestdayModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeWorkRestdayModal">&times;</span>
+      <h2>Work on Rest Day Application</h2>
+
+      <form id="workRestdayForm">
+        <label><strong>Date:</strong></label>
+        <input type="date" id="wrDate" name="wrDate" required>
+
+        <label><strong>Time In:</strong></label>
+        <input type="time" id="wrTimeIn" name="wrTimeIn" required>
+
+        <label><strong>Time Out:</strong></label>
+        <input type="time" id="wrTimeOut" name="wrTimeOut" required>
+
+        <label><strong>Reason:</strong></label>
+        <textarea id="wrReason" name="wrReason" rows="4" placeholder="Enter your reason..." required></textarea>
+
+        <label><strong>Attach File (Optional):</strong></label>
+        <input type="file" id="wrFileUpload" name="wrFileUpload" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+
+        <div class="modal-actions">
+          <button type="button" id="cancelWorkRestday">Close</button>
+          <button type="submit" id="submitWorkRestday">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Work on Holiday Modal -->
+  <!-- =============================== -->
+  <div id="workHolidayModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeWorkHolidayModal">&times;</span>
+      <h2>Work on Holiday Application</h2>
+
+      <form id="workHolidayForm">
+        <label><strong>Date:</strong></label>
+        <input type="date" id="whDate" name="whDate" required>
+
+        <label><strong>Time In:</strong></label>
+        <input type="time" id="whTimeIn" name="whTimeIn" required>
+
+        <label><strong>Time Out:</strong></label>
+        <input type="time" id="whTimeOut" name="whTimeOut" required>
+
+        <label><strong>Reason:</strong></label>
+        <textarea id="whReason" name="whReason" rows="4" placeholder="Enter your reason..." required></textarea>
+
+        <label><strong>Attach File (Optional):</strong></label>
+        <input type="file" id="whFileUpload" name="whFileUpload" accept=".jpg,.jpeg,.png,.pdf,.doc,.docx">
+
+        <div class="modal-actions">
+          <button type="button" id="cancelWorkHoliday">Close</button>
+          <button type="submit" id="submitWorkHoliday">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Change Schedule Modal -->
+  <!-- =============================== -->
+  <div id="changeScheduleModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeChangeScheduleModal">&times;</span>
+      <h2>Change Schedule Request</h2>
+
+      <form id="changeScheduleForm">
+        <label><strong>Current Shift:</strong></label>
+        <input type="time" id="csCurrentIn" name="csCurrentIn" required> -
+        <input type="time" id="csCurrentOut" name="csCurrentOut" required>
+
+        <label><strong>Requested Shift:</strong></label>
+        <input type="time" id="csRequestedIn" name="csRequestedIn" required> -
+        <input type="time" id="csRequestedOut" name="csRequestedOut" required>
+
+        <label><strong>Reason:</strong></label>
+        <textarea id="csReason" name="csReason" rows="3" placeholder="Explain why you need schedule change..." required></textarea>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelChangeSchedule">Close</button>
+          <button type="submit" id="submitChangeSchedule">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Time Log Request Modal (main) -->
+  <!-- contains list of time logs + Add button -->
+  <!-- =============================== -->
+  <div id="timeLogModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeTimeLogModal">&times;</span>
+      <h2>Time Log Requests</h2>
+
+      <div style="margin-bottom:12px;">
+        <button type="button" id="btnAddTimeLog" class="btn" style="padding:8px 12px;">Add Time Log</button>
+      </div>
+
+      <div id="timeLogList">
+        <!-- time logs will be rendered here by JS -->
+        <p id="emptyTimeLogMsg">No time logs yet.</p>
+      </div>
+
+      <div class="modal-actions" style="margin-top:12px;">
+        <button type="button" id="cancelTimeLog">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =============================== -->
+  <!-- Time Log Add/Edit Modal -->
+  <!-- =============================== -->
+  <div id="timeLogEditModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeTimeLogEditModal">&times;</span>
+      <h2 id="timeLogEditTitle">Add Time Log</h2>
+
+      <form id="timeLogForm">
+        <input type="hidden" id="timeLogId" value="">
+
+        <label><strong>Date:</strong></label>
+        <input type="date" id="tlDate" name="tlDate" required>
+
+        <label><strong>Time In:</strong></label>
+        <input type="time" id="tlIn" name="tlIn" required>
+
+        <label><strong>Time Out:</strong></label>
+        <input type="time" id="tlOut" name="tlOut" required>
+
+        <label><strong>Reason:</strong></label>
+        <textarea id="tlReason" name="tlReason" rows="3" placeholder="Reason..." required></textarea>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelTimeLogEdit">Close</button>
+          <button type="submit" id="saveTimeLog">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="apply.js"></script>
+</body>
+</html>
